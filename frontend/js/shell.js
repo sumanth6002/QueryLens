@@ -1,5 +1,5 @@
 /**
- * Shared app shell: sidebar, navigation, mobile toggle, Lucide icons.
+ * Shared app shell: sidebar, navigation, Lucide icons.
  */
 
 const QL_NAV = [
@@ -59,22 +59,6 @@ function qlInitShell() {
     if (brandLink) {
         brandLink.href = qlHref("index.html", true);
     }
-
-    const toggle = document.getElementById("sidebar-toggle");
-    const sidebar = document.getElementById("app-sidebar");
-    const overlay = document.getElementById("sidebar-overlay");
-
-    function closeSidebar() {
-        sidebar?.classList.remove("is-open");
-        overlay?.classList.remove("is-open");
-    }
-
-    toggle?.addEventListener("click", () => {
-        sidebar?.classList.toggle("is-open");
-        overlay?.classList.toggle("is-open");
-    });
-
-    overlay?.addEventListener("click", closeSidebar);
 
     if (typeof lucide !== "undefined") {
         lucide.createIcons();

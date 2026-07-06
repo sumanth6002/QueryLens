@@ -11,7 +11,6 @@
     <link rel="stylesheet" href="../css/pages/explain.css">
 </head>
 <body class="ql-app" data-page="explain">
-    <div class="ql-sidebar-overlay" id="sidebar-overlay"></div>
     <aside class="ql-sidebar" id="app-sidebar">
         <div class="ql-sidebar-brand">
             <a href="../index.html"><i data-lucide="scan-search"></i><div>QUERYLENS<span>Database Engineering</span></div></a>
@@ -35,7 +34,6 @@
     </aside>
     <div class="ql-main">
         <header class="ql-topbar">
-            <button type="button" class="btn btn-icon btn-secondary" id="sidebar-toggle"><i data-lucide="menu"></i></button>
             <span class="ql-page-title">EXPLAIN</span>
             <div class="ql-topbar-spacer"></div>
             <button type="button" id="refresh-workspaces-btn" class="btn btn-icon btn-secondary" title="Refresh"><i data-lucide="refresh-cw"></i></button>
@@ -47,7 +45,7 @@
             <section class="card explain-editor-card">
                 <label class="field-label" for="sql-input">SQL query</label>
                 <textarea id="sql-input" class="code-input" rows="6" placeholder="SELECT * FROM orders JOIN users ON users.id = orders.user_id WHERE orders.status = 'pending'"></textarea>
-                <div class="toolbar-actions" style="margin-top:1rem">
+                <div class="editor-actions">
                     <button type="button" id="run-explain-btn" class="btn btn-primary"><span class="btn-label">Run EXPLAIN</span></button>
                 </div>
             </section>

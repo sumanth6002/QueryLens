@@ -4,18 +4,6 @@
     background: var(--bg);
 }
 
-.ql-sidebar-overlay {
-    display: none;
-    position: fixed;
-    inset: 0;
-    background: rgba(0, 0, 0, 0.6);
-    z-index: 40;
-}
-
-.ql-sidebar-overlay.is-open {
-    display: block;
-}
-
 .ql-sidebar {
     width: var(--sidebar-width);
     flex-shrink: 0;
@@ -182,17 +170,6 @@
 }
 
 @media (max-width: 900px) {
-    .ql-sidebar {
-        position: fixed;
-        left: 0;
-        transform: translateX(-100%);
-        transition: transform var(--transition);
-    }
-
-    .ql-sidebar.is-open {
-        transform: translateX(0);
-    }
-
     .ql-content {
         padding: 1.25rem;
     }

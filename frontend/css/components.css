@@ -399,6 +399,37 @@
     color: var(--danger);
 }
 
+/* Code editor input */
+.code-input {
+    width: 100%;
+    min-height: 140px;
+    padding: 1rem 1.15rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 0.875rem;
+    line-height: 1.6;
+    resize: vertical;
+}
+
+.code-input:focus {
+    outline: none;
+    border-color: var(--border-strong);
+}
+
+.code-input--lg {
+    min-height: 180px;
+}
+
+.editor-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin-top: 1rem;
+}
+
 /* Code */
 pre,
 .code-block {

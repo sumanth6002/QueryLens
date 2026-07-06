@@ -1,3 +1,66 @@
+.ia-page {
+    max-width: 960px;
+}
+
+.ia-editor {
+    padding: 1.25rem 1.5rem;
+}
+
+.ia-editor:hover {
+    transform: none;
+}
+
+.ia-editor-header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 0.5rem 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.ia-editor-hint {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+.ia-results {
+    margin-top: 1.5rem;
+}
+
+.ia-summary {
+    margin-bottom: 1.5rem;
+}
+
+.ia-results-title {
+    margin-bottom: 0.75rem;
+}
+
+.ia-parsed {
+    margin-top: 1.5rem;
+    padding: 1rem 1.25rem;
+}
+
+.ia-parsed:hover {
+    transform: none;
+}
+
+.ia-parsed summary {
+    cursor: pointer;
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--text-secondary);
+    list-style: none;
+}
+
+.ia-parsed summary::-webkit-details-marker {
+    display: none;
+}
+
+.ia-parsed pre {
+    margin-top: 1rem;
+}
+
 .recommendation-grid {
     display: grid;
     gap: 0.75rem;
