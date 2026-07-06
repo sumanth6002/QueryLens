@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ER Diagram — QueryLens</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/er-diagram.css">
+</head>
+<body>
+    <header class="header">
+        <h1><a href="../index.html">QueryLens</a></h1>
+        <p class="tagline">Entity-Relationship Diagram</p>
+    </header>
+
+    <main class="container er-page">
+        <section class="er-controls">
+            <label>
+                Workspace
+                <select id="workspace-select">
+                    <option value="">Select a workspace</option>
+                </select>
+            </label>
+
+            <div class="er-actions">
+                <button type="button" id="load-diagram-btn" class="btn">Load ER Diagram</button>
+                <button type="button" id="refresh-workspaces-btn" class="btn btn-secondary">Refresh Workspaces</button>
+            </div>
+        </section>
+
+        <div id="error-banner" class="banner-error" hidden></div>
+
+        <div id="diagram-meta" class="er-meta" hidden></div>
+
+        <section id="diagram-panel" class="er-diagram-panel empty">
+            <p>Choose a workspace and load the ER diagram.</p>
+        </section>
+
+        <section class="er-source">
+            <h2>Mermaid Source</h2>
+            <pre id="mermaid-source">No diagram loaded.</pre>
+        </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/workspaces.js"></script>
+    <script src="../js/er-diagram.js"></script>
+</body>
+</html>

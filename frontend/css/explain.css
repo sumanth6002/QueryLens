@@ -1,0 +1,145 @@
+.explain-page {
+    max-width: 1280px;
+}
+
+.explain-layout {
+    display: grid;
+    gap: 1.5rem;
+}
+
+.explain-controls,
+.explain-summary,
+.explain-panel,
+.explain-legend {
+    background: var(--color-surface);
+    border-radius: 12px;
+    padding: 1.25rem;
+}
+
+.explain-controls label {
+    display: grid;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+}
+
+.explain-controls input,
+.explain-controls select,
+.explain-controls textarea {
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    background: #0b1220;
+    color: var(--color-text);
+    font: inherit;
+}
+
+.explain-controls textarea {
+    min-height: 120px;
+    resize: vertical;
+    font-family: Consolas, "Courier New", monospace;
+}
+
+.explain-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.explain-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+}
+
+.summary-card {
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    background: #0b1220;
+}
+
+.summary-card strong {
+    display: block;
+    font-size: 1.4rem;
+    color: var(--color-accent);
+}
+
+.summary-card span {
+    color: var(--color-muted);
+    font-size: 0.85rem;
+}
+
+.explain-panel {
+    min-height: 520px;
+    overflow: auto;
+    background: #f8fafc;
+    color: #0f172a;
+}
+
+.explain-panel.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--color-muted);
+    background: var(--color-surface);
+}
+
+.explain-legend {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.legend-swatch {
+    width: 16px;
+    height: 16px;
+    border-radius: 4px;
+}
+
+.explain-error {
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    background: #451a1a;
+    color: #fecaca;
+}
+
+.explain-info {
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    background: #172554;
+    color: #bfdbfe;
+}
+
+.node circle {
+    stroke-width: 2px;
+}
+
+.node text {
+    font-size: 12px;
+}
+
+.link {
+    fill: none;
+    stroke: #94a3b8;
+    stroke-width: 1.5px;
+}
+
+.node-label {
+    font-weight: 600;
+}
+
+.node-meta {
+    fill: #475569;
+    font-size: 11px;
+}

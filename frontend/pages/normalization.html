@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Normalization Checker — QueryLens</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/normalization.css">
+</head>
+<body>
+    <header class="header">
+        <h1><a href="../index.html">QueryLens</a></h1>
+        <p class="tagline">Normalization Checker (1NF – BCNF)</p>
+    </header>
+
+    <main class="container normalization-page">
+        <div class="norm-layout">
+            <section class="norm-panel">
+                <label>
+                    Workspace
+                    <select id="workspace-select">
+                        <option value="">Select a workspace</option>
+                    </select>
+                </label>
+
+                <label>
+                    Attributes (one per line)
+                    <textarea id="attributes-input">StudentID
+CourseID
+StudentName
+Grade</textarea>
+                </label>
+
+                <label>
+                    Functional Dependencies (JSON)
+                    <textarea id="fds-input">[
+  { "determinants": ["StudentID"], "dependents": ["StudentName"] },
+  { "determinants": ["StudentID", "CourseID"], "dependents": ["Grade"] }
+]</textarea>
+                </label>
+
+                <label>
+                    Multivalued Attributes (comma-separated, optional)
+                    <input type="text" id="multivalued-input" placeholder="Hobby, Phone">
+                </label>
+
+                <label>
+                    Closure Of (comma-separated, optional)
+                    <input type="text" id="closure-input" placeholder="StudentID">
+                </label>
+
+                <div class="norm-actions">
+                    <button type="button" id="analyze-btn" class="btn">Analyze Normalization</button>
+                    <button type="button" id="save-report-btn" class="btn btn-secondary">Analyze &amp; Save Report</button>
+                    <button type="button" id="refresh-workspaces-btn" class="btn btn-secondary">Refresh Workspaces</button>
+                </div>
+            </section>
+
+            <div id="error-banner" class="banner-error" hidden></div>
+            <div id="info-banner" class="banner-info" hidden></div>
+
+            <section id="results-panel" class="norm-panel" hidden>
+                <h2>Analysis Results</h2>
+                <div id="keys-summary" class="result-block"></div>
+                <div id="normal-forms" class="norm-grid"></div>
+                <div class="result-block">
+                    <h3>Attribute Closure Map</h3>
+                    <pre id="closure-output"></pre>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/workspaces.js"></script>
+    <script src="../js/normalization.js"></script>
+</body>
+</html>

@@ -1,0 +1,125 @@
+.index-page {
+    max-width: 1100px;
+}
+
+.index-panel {
+    background: var(--color-surface);
+    border-radius: 12px;
+    padding: 1.25rem;
+    margin-bottom: 1.5rem;
+}
+
+.index-panel label {
+    display: grid;
+    gap: 0.35rem;
+    margin-bottom: 1rem;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+}
+
+.index-panel input,
+.index-panel select,
+.index-panel textarea {
+    width: 100%;
+    padding: 0.65rem 0.8rem;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    background: #0b1220;
+    color: var(--color-text);
+    font: inherit;
+}
+
+.index-panel textarea {
+    min-height: 120px;
+    font-family: Consolas, "Courier New", monospace;
+}
+
+.index-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.index-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+
+.summary-card {
+    background: #0b1220;
+    border-radius: 8px;
+    padding: 0.85rem 1rem;
+}
+
+.summary-card strong {
+    display: block;
+    font-size: 1.3rem;
+    color: var(--color-accent);
+}
+
+.recommendation-list {
+    display: grid;
+    gap: 1rem;
+}
+
+.recommendation-card {
+    background: #0b1220;
+    border-radius: 10px;
+    padding: 1rem;
+    border: 1px solid #334155;
+}
+
+.recommendation-card.high {
+    border-color: #ef4444;
+}
+
+.recommendation-card.medium {
+    border-color: #f59e0b;
+}
+
+.recommendation-card h3 {
+    margin-bottom: 0.35rem;
+}
+
+.recommendation-meta {
+    color: var(--color-muted);
+    font-size: 0.9rem;
+    margin-bottom: 0.75rem;
+}
+
+.recommendation-card pre {
+    overflow: auto;
+    white-space: pre-wrap;
+    color: #bae6fd;
+    margin-top: 0.75rem;
+}
+
+.index-error,
+.index-info {
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+}
+
+.index-error {
+    background: #451a1a;
+    color: #fecaca;
+}
+
+.index-info {
+    background: #172554;
+    color: #bfdbfe;
+}
+
+.parsed-block {
+    margin-top: 1rem;
+}
+
+.parsed-block pre {
+    overflow: auto;
+    white-space: pre-wrap;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+}

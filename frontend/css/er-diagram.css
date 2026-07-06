@@ -1,0 +1,110 @@
+.er-page {
+    max-width: 1200px;
+}
+
+.er-controls {
+    display: grid;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding: 1.25rem;
+    background: var(--color-surface);
+    border-radius: 12px;
+}
+
+.er-controls label {
+    display: grid;
+    gap: 0.35rem;
+    font-size: 0.9rem;
+    color: var(--color-muted);
+}
+
+.er-controls input,
+.er-controls select,
+.er-controls button {
+    font: inherit;
+}
+
+.er-controls input,
+.er-controls select {
+    padding: 0.65rem 0.8rem;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    background: #0b1220;
+    color: var(--color-text);
+}
+
+.er-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.btn {
+    padding: 0.65rem 1rem;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    background: var(--color-accent);
+    color: #082f49;
+    font-weight: 600;
+}
+
+.btn-secondary {
+    background: #334155;
+    color: var(--color-text);
+}
+
+.er-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1rem;
+    color: var(--color-muted);
+    font-size: 0.95rem;
+}
+
+.er-diagram-panel {
+    background: #f8fafc;
+    color: #0f172a;
+    border-radius: 12px;
+    padding: 1.5rem;
+    min-height: 420px;
+    overflow: auto;
+}
+
+.er-diagram-panel.empty {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #475569;
+    background: var(--color-surface);
+    color: var(--color-muted);
+}
+
+.er-error {
+    margin-bottom: 1rem;
+    padding: 0.85rem 1rem;
+    border-radius: 8px;
+    background: #451a1a;
+    color: #fecaca;
+}
+
+.er-source {
+    margin-top: 1.5rem;
+    padding: 1rem;
+    background: var(--color-surface);
+    border-radius: 12px;
+}
+
+.er-source pre {
+    overflow: auto;
+    white-space: pre-wrap;
+    word-break: break-word;
+    color: var(--color-muted);
+    font-size: 0.85rem;
+}
+
+.mermaid {
+    display: flex;
+    justify-content: center;
+}

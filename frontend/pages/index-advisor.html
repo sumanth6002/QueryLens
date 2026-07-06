@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Index Advisor — QueryLens</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/index-advisor.css">
+</head>
+<body>
+    <header class="header">
+        <h1><a href="../index.html">QueryLens</a></h1>
+        <p class="tagline">Index Advisor</p>
+    </header>
+
+    <main class="container index-page">
+        <section class="index-panel">
+            <label>
+                Workspace
+                <select id="workspace-select">
+                    <option value="">Select a workspace</option>
+                </select>
+            </label>
+
+            <label>
+                SELECT query
+                <textarea id="sql-input">SELECT o.id, u.email
+FROM orders o
+JOIN users u ON u.id = o.user_id
+WHERE o.status = 'active'
+GROUP BY o.user_id
+ORDER BY o.created_at DESC</textarea>
+            </label>
+
+            <div class="index-actions">
+                <button type="button" id="analyze-btn" class="btn">Analyze Indexes</button>
+                <button type="button" id="save-btn" class="btn btn-secondary">Analyze &amp; Save</button>
+                <button type="button" id="refresh-workspaces-btn" class="btn btn-secondary">Refresh Workspaces</button>
+            </div>
+        </section>
+
+        <div id="error-banner" class="banner-error" hidden></div>
+        <div id="info-banner" class="banner-info" hidden></div>
+
+        <section id="results-panel" class="index-panel" hidden>
+            <h2>Recommendations</h2>
+            <div id="summary-panel" class="index-summary"></div>
+            <div id="recommendations-list" class="recommendation-list"></div>
+            <div class="parsed-block">
+                <h3>Parsed Clauses</h3>
+                <pre id="parsed-output"></pre>
+            </div>
+        </section>
+    </main>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/workspaces.js"></script>
+    <script src="../js/index-advisor.js"></script>
+</body>
+</html>

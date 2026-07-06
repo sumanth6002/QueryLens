@@ -1,0 +1,57 @@
+.banner-error {
+    background: #451a1a;
+    color: #fecaca;
+    border: 1px solid #7f1d1d;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.banner-info {
+    background: #172554;
+    color: #bfdbfe;
+    border: 1px solid #1e3a8a;
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    display: grid;
+    gap: 0.35rem;
+    color: var(--color-muted);
+    font-size: 0.9rem;
+}
+
+.form-control,
+.form-textarea {
+    padding: 0.65rem 0.8rem;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    background: #0b1220;
+    color: var(--color-text);
+    font: inherit;
+}
+
+.form-textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+.summary-card {
+    background: var(--color-surface);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    text-align: center;
+}
+
+.summary-card strong {
+    display: block;
+    font-size: 1.25rem;
+    color: var(--color-accent);
+}
+
+.summary-card span {
+    color: var(--color-muted);
+    font-size: 0.85rem;
+}

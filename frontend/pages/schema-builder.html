@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Schema Builder — QueryLens</title>
+    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/components.css">
+    <link rel="stylesheet" href="../css/schema-builder.css">
+</head>
+<body>
+    <header class="header">
+        <h1><a href="../index.html">QueryLens</a></h1>
+        <p class="tagline">Schema Builder</p>
+    </header>
+
+    <main class="container schema-page">
+        <section class="schema-toolbar">
+            <label>
+                Workspace
+                <select id="workspace-select">
+                    <option value="">Select a workspace</option>
+                </select>
+            </label>
+
+            <div class="schema-toolbar-actions">
+                <button type="button" id="load-schema-btn" class="btn">Load Schema</button>
+                <button type="button" id="refresh-workspaces-btn" class="btn btn-secondary">Refresh Workspaces</button>
+                <a id="er-diagram-link" class="btn btn-secondary" href="er-diagram.html">View ER Diagram</a>
+            </div>
+        </section>
+
+        <div id="error-banner" class="banner-error" hidden></div>
+        <div id="info-banner" class="banner-info" hidden></div>
+
+        <div class="schema-layout">
+            <aside class="schema-panel schema-sidebar">
+                <div class="schema-sidebar-header">
+                    <h2>Tables</h2>
+                    <button type="button" id="new-table-btn" class="btn btn-small">+ New Table</button>
+                </div>
+                <ul id="table-list" class="table-list">
+                    <li class="table-list-empty">Load a workspace to see tables.</li>
+                </ul>
+            </aside>
+
+            <section class="schema-panel schema-editor" id="editor-panel" hidden>
+                <h2 id="editor-title">New Table</h2>
+
+                <label>
+                    Table Name
+                    <input type="text" id="table-name-input" placeholder="users">
+                </label>
+
+                <div class="columns-section">
+                    <div class="section-header">
+                        <h3>Columns</h3>
+                        <button type="button" id="add-column-btn" class="btn btn-small btn-secondary">+ Add Column</button>
+                    </div>
+                    <div class="columns-table-wrap">
+                        <table class="columns-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Type</th>
+                                    <th>PK</th>
+                                    <th>Nullable</th>
+                                    <th>Auto Inc.</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody id="columns-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <div class="fk-section">
+                    <div class="section-header">
+                        <h3>Foreign Keys</h3>
+                        <button type="button" id="add-fk-btn" class="btn btn-small btn-secondary">+ Add FK</button>
+                    </div>
+                    <div id="fk-list" class="fk-list"></div>
+                </div>
+
+                <div class="schema-editor-actions">
+                    <button type="button" id="save-table-btn" class="btn">Save Table</button>
+                    <button type="button" id="delete-table-btn" class="btn btn-danger" hidden>Delete Table</button>
+                    <button type="button" id="preview-sql-btn" class="btn btn-secondary">Preview SQL</button>
+                </div>
+            </section>
+        </div>
+
+        <section class="schema-panel sql-preview-panel" id="sql-preview-panel" hidden>
+            <h2>SQL Preview</h2>
+            <pre id="sql-preview-output"></pre>
+        </section>
+    </main>
+
+    <script src="../js/config.js"></script>
+    <script src="../js/api.js"></script>
+    <script src="../js/ui.js"></script>
+    <script src="../js/workspaces.js"></script>
+    <script src="../js/schema-builder.js"></script>
+</body>
+</html>

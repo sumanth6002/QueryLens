@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>QueryLens</title>
+    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/components.css">
+</head>
+<body>
+    <header class="header">
+        <h1>QueryLens</h1>
+        <p class="tagline">SQL Schema Design &amp; Query Performance Analyzer</p>
+    </header>
+
+    <main class="container">
+        <p>Open a feature page below. Authentication is disabled during development.</p>
+
+        <section class="home-panel">
+            <h2>Workspaces</h2>
+            <label>
+                Create workspace
+                <input type="text" id="workspace-name" placeholder="My Database Project">
+            </label>
+            <button type="button" id="create-workspace-btn" class="btn">Create Workspace</button>
+            <p id="workspace-status" class="home-status"></p>
+        </section>
+
+        <ul>
+            <li><a href="pages/schema-builder.html">Schema Builder</a></li>
+            <li><a href="pages/er-diagram.html">ER Diagram Viewer</a></li>
+            <li><a href="pages/explain.html">EXPLAIN Visualizer</a></li>
+            <li><a href="pages/normalization.html">Normalization Checker</a></li>
+            <li><a href="pages/index-advisor.html">Index Advisor</a></li>
+        </ul>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script src="js/ui.js"></script>
+    <script src="js/main.js"></script>
+</body>
+</html>
