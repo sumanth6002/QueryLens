@@ -3,72 +3,80 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EXPLAIN Visualizer — QueryLens</title>
-    <link rel="stylesheet" href="../css/main.css">
+    <title>EXPLAIN — QueryLens</title>
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components.css">
-    <link rel="stylesheet" href="../css/explain.css">
+    <link rel="stylesheet" href="../css/pages/explain.css">
 </head>
-<body>
-    <header class="header">
-        <h1><a href="../index.html">QueryLens</a></h1>
-        <p class="tagline">EXPLAIN Plan Visualizer</p>
-    </header>
-
-    <main class="container explain-page">
-        <div class="explain-layout">
-            <section class="explain-controls">
-                <label>
-                    Workspace
-                    <select id="workspace-select">
-                        <option value="">Select a workspace</option>
-                    </select>
-                </label>
-
-                <label>
-                    SELECT query
-                    <textarea id="sql-input" placeholder="SELECT * FROM orders JOIN users ON users.id = orders.user_id"></textarea>
-                </label>
-
-                <div class="explain-actions">
-                    <button type="button" id="run-explain-btn" class="btn">Run EXPLAIN</button>
-                    <button type="button" id="refresh-workspaces-btn" class="btn btn-secondary">Refresh Workspaces</button>
-                </div>
-            </section>
-
+<body class="ql-app" data-page="explain">
+    <div class="ql-sidebar-overlay" id="sidebar-overlay"></div>
+    <aside class="ql-sidebar" id="app-sidebar">
+        <div class="ql-sidebar-brand">
+            <a href="../index.html"><i data-lucide="scan-search"></i><div>QUERYLENS<span>Database Engineering</span></div></a>
+        </div>
+        <div class="ql-sidebar-section">
+            <div class="ql-sidebar-label">Workspace</div>
+            <select id="workspace-select" class="select"><option value="">Select workspace</option></select>
+        </div>
+        <nav class="ql-nav" aria-label="Main">
+            <a href="../index.html" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+            <a href="schema-builder.html" data-nav="schema-builder"><i data-lucide="table-2"></i> Schema Builder</a>
+            <a href="er-diagram.html" data-nav="er-diagram"><i data-lucide="git-branch"></i> ER Diagram</a>
+            <a href="explain.html" data-nav="explain"><i data-lucide="workflow"></i> EXPLAIN</a>
+            <a href="normalization.html" data-nav="normalization"><i data-lucide="layers"></i> Normalization</a>
+            <a href="index-advisor.html" data-nav="index-advisor"><i data-lucide="zap"></i> Index Advisor</a>
+            <a href="reports.html" data-nav="reports"><i data-lucide="file-text"></i> Reports</a>
+        </nav>
+        <div class="ql-sidebar-footer">
+            <a href="settings.html" data-nav="settings"><i data-lucide="settings"></i> Settings</a>
+        </div>
+    </aside>
+    <div class="ql-main">
+        <header class="ql-topbar">
+            <button type="button" class="btn btn-icon btn-secondary" id="sidebar-toggle"><i data-lucide="menu"></i></button>
+            <span class="ql-page-title">EXPLAIN</span>
+            <div class="ql-topbar-spacer"></div>
+            <button type="button" id="refresh-workspaces-btn" class="btn btn-icon btn-secondary" title="Refresh"><i data-lucide="refresh-cw"></i></button>
+        </header>
+        <main class="ql-content ql-content--wide page-enter">
             <div id="error-banner" class="banner-error" hidden></div>
             <div id="info-banner" class="banner-info" hidden></div>
 
-            <section id="summary-panel" class="explain-summary" hidden></section>
-
-            <section class="explain-legend">
-                <div class="legend-item">
-                    <span class="legend-swatch" style="background:#ef4444;"></span>
-                    Table scan (ALL)
-                </div>
-                <div class="legend-item">
-                    <span class="legend-swatch" style="background:#f59e0b;"></span>
-                    Full index scan
-                </div>
-                <div class="legend-item">
-                    <span class="legend-swatch" style="background:#22c55e;"></span>
-                    Index seek
-                </div>
-                <div class="legend-item">
-                    <span class="legend-swatch" style="background:#64748b;"></span>
-                    Operation / other
+            <section class="card explain-editor-card">
+                <label class="field-label" for="sql-input">SQL query</label>
+                <textarea id="sql-input" class="code-input" rows="6" placeholder="SELECT * FROM orders JOIN users ON users.id = orders.user_id WHERE orders.status = 'pending'"></textarea>
+                <div class="toolbar-actions" style="margin-top:1rem">
+                    <button type="button" id="run-explain-btn" class="btn btn-primary"><span class="btn-label">Run EXPLAIN</span></button>
                 </div>
             </section>
 
-            <section id="tree-panel" class="explain-panel empty">
-                <p>Choose a workspace and run EXPLAIN on a SELECT query.</p>
-            </section>
-        </div>
-    </main>
+            <section id="summary-panel" class="metric-grid" hidden></section>
 
+            <section class="explain-legend card">
+                <span class="legend-item"><span class="legend-swatch" style="background:#ef4444"></span> Table scan</span>
+                <span class="legend-item"><span class="legend-swatch" style="background:#f59e0b"></span> Full index scan</span>
+                <span class="legend-item"><span class="legend-swatch" style="background:#22c55e"></span> Index seek</span>
+                <span class="legend-item"><span class="legend-swatch" style="background:#737373"></span> Operation</span>
+            </section>
+
+            <section id="tree-panel" class="card explain-tree-panel empty">
+                <p>Run EXPLAIN on a SELECT query to visualize the execution plan.</p>
+            </section>
+
+            <section id="recommendations-panel" class="explain-recommendations" hidden>
+                <h2 class="section-heading">Optimization recommendations</h2>
+                <div id="recommendations-list" class="recommendation-grid"></div>
+            </section>
+        </main>
+    </div>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/d3@7/dist/d3.min.js"></script>
     <script src="../js/config.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/ui.js"></script>
+    <script src="../js/shell.js"></script>
     <script src="../js/workspaces.js"></script>
     <script src="../js/explain.js"></script>
 </body>

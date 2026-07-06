@@ -2,8 +2,8 @@ const SCAN_COLORS = {
     table_scan: "#ef4444",
     full_index_scan: "#f59e0b",
     index_seek: "#22c55e",
-    operation: "#64748b",
-    other: "#94a3b8",
+    operation: "#737373",
+    other: "#737373",
 };
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -13,6 +13,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const refreshWorkspacesBtn = document.getElementById("refresh-workspaces-btn");
     const treePanel = document.getElementById("tree-panel");
     const summaryPanel = document.getElementById("summary-panel");
+    const recommendationsPanel = document.getElementById("recommendations-panel");
+    const recommendationsList = document.getElementById("recommendations-list");
     const errorBanner = document.getElementById("error-banner");
     const infoBanner = document.getElementById("info-banner");
 
@@ -24,20 +26,62 @@ document.addEventListener("DOMContentLoaded", () => {
         };
     }
 
-    function renderSummary(summary, executionTimeMs) {
+    function deriveAccessType(summary) {
+        if (!summary) return "—";
+        if (summary.table_scans > 0 && summary.index_seeks === 0) return "Table scan";
+        if (summary.index_seeks > 0 && summary.table_scans === 0) return "Index access";
+        if (summary.index_seeks > 0 && summary.table_scans > 0) return "Mixed";
+        if (summary.full_index_scans > 0) return "Index scan";
+        return "Other";
+    }
+
+    function renderSummary(summary, executionTimeMs, issueCount) {
         if (!summary) {
             summaryPanel.hidden = true;
             return;
         }
 
+        const indexesUsed = (summary.index_seeks || 0) + (summary.full_index_scans || 0);
+
         summaryPanel.hidden = false;
         summaryPanel.innerHTML = `
-            <div class="summary-card"><strong>${escapeHtml(summary.total_tables)}</strong><span>Tables</span></div>
-            <div class="summary-card"><strong>${escapeHtml(summary.table_scans)}</strong><span>Table scans</span></div>
-            <div class="summary-card"><strong>${escapeHtml(summary.full_index_scans)}</strong><span>Full index scans</span></div>
-            <div class="summary-card"><strong>${escapeHtml(summary.index_seeks)}</strong><span>Index seeks</span></div>
-            <div class="summary-card"><strong>${escapeHtml(executionTimeMs)} ms</strong><span>Analysis time</span></div>
+            <div class="metric-card"><strong>${escapeHtml(summary.estimated_rows ?? 0)}</strong><span>Rows examined</span></div>
+            <div class="metric-card"><strong>${escapeHtml(deriveAccessType(summary))}</strong><span>Access type</span></div>
+            <div class="metric-card"><strong>${escapeHtml(indexesUsed)}</strong><span>Indexes used</span></div>
+            <div class="metric-card"><strong>${escapeHtml(executionTimeMs)} ms</strong><span>Execution time</span></div>
+            <div class="metric-card"><strong>${escapeHtml(issueCount)}</strong><span>Warnings</span></div>
         `;
+    }
+
+    function renderRecommendations(issues) {
+        if (!issues?.length) {
+            recommendationsPanel.hidden = true;
+            recommendationsList.innerHTML = "";
+            return;
+        }
+
+        recommendationsPanel.hidden = false;
+        recommendationsList.innerHTML = "";
+
+        issues.forEach((issue) => {
+            const card = document.createElement("article");
+            card.className = `recommendation-card ${issue.severity || "medium"}`;
+
+            const title = document.createElement("h3");
+            title.textContent = issue.category?.replace(/_/g, " ") || "Recommendation";
+
+            const meta = document.createElement("div");
+            meta.className = "recommendation-meta";
+            meta.textContent = `${issue.severity} severity${issue.table ? ` · ${issue.table}` : ""}`;
+
+            const message = document.createElement("p");
+            message.textContent = issue.message;
+
+            card.appendChild(title);
+            card.appendChild(meta);
+            card.appendChild(message);
+            recommendationsList.appendChild(card);
+        });
     }
 
     function renderTree(treeData) {
@@ -78,7 +122,7 @@ document.addEventListener("DOMContentLoaded", () => {
         node.append("circle")
             .attr("r", 14)
             .attr("fill", (d) => SCAN_COLORS[d.data.meta.scan_category] || SCAN_COLORS.other)
-            .attr("stroke", "#0f172a");
+            .attr("stroke", "#151515");
 
         node.append("text")
             .attr("dy", -22)
@@ -104,11 +148,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     function showEmptyState(message) {
         treePanel.classList.add("empty");
-        const paragraph = document.createElement("p");
-        paragraph.textContent = message;
-        treePanel.innerHTML = "";
-        treePanel.appendChild(paragraph);
+        treePanel.innerHTML = `<p>${escapeHtml(message)}</p>`;
         summaryPanel.hidden = true;
+        recommendationsPanel.hidden = true;
     }
 
     async function handleRunExplain() {
@@ -142,8 +184,10 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
 
-            renderSummary(data.summary, data.execution_time_ms);
+            const issues = data.issues || [];
+            renderSummary(data.summary, data.execution_time_ms, issues.length);
             renderTree(data.tree);
+            renderRecommendations(issues);
         } catch (error) {
             showError(errorBanner, error.message);
             showEmptyState("Unable to render execution plan.");

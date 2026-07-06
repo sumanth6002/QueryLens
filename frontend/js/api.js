@@ -53,6 +53,18 @@ async function createWorkspace(name, description = "") {
     });
 }
 
+async function deleteWorkspace(workspaceId) {
+    return apiRequest(`/api/workspaces/${workspaceId}`, { method: "DELETE" });
+}
+
+async function executeSchema(workspaceId, tableName = null) {
+    const body = tableName ? { table: tableName } : {};
+    return apiRequest(`/api/workspaces/${workspaceId}/schema/execute`, {
+        method: "POST",
+        body: JSON.stringify(body),
+    });
+}
+
 async function fetchSchema(workspaceId) {
     return apiRequest(`/api/workspaces/${workspaceId}/schema`);
 }
@@ -105,4 +117,12 @@ async function analyzeIndexes(workspaceId, sql, save = false) {
         method: "POST",
         body: JSON.stringify({ sql, save }),
     });
+}
+
+async function fetchNormalizationReports(workspaceId) {
+    return apiRequest(`/api/workspaces/${workspaceId}/normalization/reports`);
+}
+
+async function fetchIndexRecommendations(workspaceId) {
+    return apiRequest(`/api/workspaces/${workspaceId}/index-advisor/recommendations`);
 }

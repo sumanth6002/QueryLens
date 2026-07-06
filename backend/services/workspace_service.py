@@ -2,6 +2,7 @@ from database.connection import db
 from services.access_helpers import get_owned_workspace
 from models.user import User
 from models.workspace import Workspace
+from utils.exceptions import ConflictError
 from utils.validators import validate_workspace_name
 
 
@@ -35,6 +36,10 @@ class WorkspaceService:
     ) -> Workspace:
         cleaned_name = validate_workspace_name(name)
         cleaned_description = description.strip() if description else None
+
+        duplicate = Workspace.query.filter_by(user_id=user.id, name=cleaned_name).first()
+        if duplicate:
+            raise ConflictError(f"Workspace '{cleaned_name}' already exists.")
 
         workspace = Workspace(
             name=cleaned_name,

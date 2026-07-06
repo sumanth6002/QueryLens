@@ -1,0 +1,72 @@
+.ql-main--flush {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.ql-content--flush {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    max-width: none;
+}
+
+.diagram-meta {
+    display: flex;
+    gap: 1rem;
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-right: 0.75rem;
+}
+
+.diagram-meta strong {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.diagram-viewport {
+    flex: 1;
+    overflow: hidden;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border);
+    position: relative;
+    min-height: calc(100vh - var(--topbar-height) - 80px);
+}
+
+.diagram-canvas {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform-origin: center center;
+    transition: transform 200ms ease;
+    padding: 2rem;
+}
+
+.diagram-canvas.empty {
+    color: var(--text-muted);
+}
+
+.diagram-canvas .mermaid {
+    max-width: 100%;
+}
+
+.diagram-viewport:fullscreen {
+    background: var(--bg);
+}
+
+.diagram-viewport:fullscreen .diagram-canvas {
+    min-height: 100vh;
+}
+
+.diagram-source {
+    margin: 1rem;
+}
+
+.diagram-source summary {
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.875rem;
+}

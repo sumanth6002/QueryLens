@@ -3,22 +3,18 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Index Advisor — QueryLens</title>
+    <title>Settings — QueryLens</title>
     <link rel="stylesheet" href="../css/variables.css">
     <link rel="stylesheet" href="../css/base.css">
     <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components.css">
-    <link rel="stylesheet" href="../css/pages/index-advisor.css">
+    <link rel="stylesheet" href="../css/pages/settings.css">
 </head>
-<body class="ql-app" data-page="index-advisor">
+<body class="ql-app" data-page="settings">
     <div class="ql-sidebar-overlay" id="sidebar-overlay"></div>
     <aside class="ql-sidebar" id="app-sidebar">
         <div class="ql-sidebar-brand">
             <a href="../index.html"><i data-lucide="scan-search"></i><div>QUERYLENS<span>Database Engineering</span></div></a>
-        </div>
-        <div class="ql-sidebar-section">
-            <div class="ql-sidebar-label">Workspace</div>
-            <select id="workspace-select" class="select"><option value="">Select workspace</option></select>
         </div>
         <nav class="ql-nav" aria-label="Main">
             <a href="../index.html" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
@@ -36,40 +32,29 @@
     <div class="ql-main">
         <header class="ql-topbar">
             <button type="button" class="btn btn-icon btn-secondary" id="sidebar-toggle"><i data-lucide="menu"></i></button>
-            <span class="ql-page-title">Index Advisor</span>
-            <div class="ql-topbar-spacer"></div>
-            <button type="button" id="refresh-workspaces-btn" class="btn btn-icon btn-secondary" title="Refresh"><i data-lucide="refresh-cw"></i></button>
+            <span class="ql-page-title">Settings</span>
         </header>
         <main class="ql-content page-enter">
-            <div id="error-banner" class="banner-error" hidden></div>
-            <div id="info-banner" class="banner-info" hidden></div>
-
-            <section class="card">
-                <label class="field-label" for="sql-input">SELECT query</label>
-                <textarea id="sql-input" class="code-input" rows="6" placeholder="SELECT * FROM orders WHERE user_id = 42 ORDER BY created_at"></textarea>
-                <div class="toolbar-actions" style="margin-top:1rem">
-                    <button type="button" id="analyze-btn" class="btn btn-primary"><span class="btn-label">Analyze Indexes</span></button>
-                    <button type="button" id="save-btn" class="btn btn-secondary">Analyze &amp; Save</button>
+            <section class="card settings-card">
+                <h2 class="section-heading" style="font-size:1.1rem;margin-bottom:1.25rem">API connection</h2>
+                <div class="settings-row">
+                    <span class="field-label">Backend URL</span>
+                    <code id="api-url-display" class="settings-value"></code>
                 </div>
+                <p class="settings-hint">Override with <code>window.QUERYLENS_API_URL</code> before loading config.js, or set in your deployment.</p>
             </section>
 
-            <section id="results-panel" hidden>
-                <div id="summary-panel" class="metric-grid" style="margin:1.5rem 0"></div>
-                <h2 class="section-heading">Suggested indexes</h2>
-                <div id="recommendations-list" class="recommendation-grid"></div>
-                <details class="card" style="margin-top:1.5rem">
-                    <summary class="section-heading" style="font-size:1rem;cursor:pointer">Parsed query</summary>
-                    <pre id="parsed-output" class="code-block" style="margin-top:1rem"></pre>
-                </details>
+            <section class="card settings-card">
+                <h2 class="section-heading" style="font-size:1.1rem;margin-bottom:1.25rem">About</h2>
+                <p class="settings-hint">QueryLens — schema design, EXPLAIN visualization, normalization analysis, and index recommendations for MySQL workspaces.</p>
             </section>
         </main>
     </div>
     <script src="https://unpkg.com/lucide@latest"></script>
     <script src="../js/config.js"></script>
-    <script src="../js/api.js"></script>
-    <script src="../js/ui.js"></script>
     <script src="../js/shell.js"></script>
-    <script src="../js/workspaces.js"></script>
-    <script src="../js/index-advisor.js"></script>
+    <script>
+        document.getElementById("api-url-display").textContent = API_BASE_URL;
+    </script>
 </body>
 </html>

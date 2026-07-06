@@ -1,6 +1,11 @@
 import os
 
 from dotenv import load_dotenv
+
+from config import BACKEND_DIR
+
+load_dotenv(os.path.join(BACKEND_DIR, ".env"))
+
 from flask import Flask
 from flask_cors import CORS
 
@@ -9,13 +14,10 @@ from database.connection import db
 from middleware.error_handlers import register_error_handlers
 from routes import register_blueprints
 
-load_dotenv()
-
-import models  # noqa: E402, F401 — register ORM models with SQLAlchemy metadata
+import models  # noqa: E402, F401
 
 
 def create_app(config_name: str | None = None) -> Flask:
-    """Application factory — creates and configures the Flask app."""
     if config_name is None:
         config_name = os.environ.get("FLASK_ENV", "development")
 
@@ -35,7 +37,6 @@ def create_app(config_name: str | None = None) -> Flask:
 
     register_blueprints(app)
     register_error_handlers(app)
-
     return app
 
 

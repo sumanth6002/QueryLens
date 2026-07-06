@@ -59,17 +59,22 @@ document.addEventListener("DOMContentLoaded", () => {
 
         const badge = document.createElement("span");
         badge.className = `badge ${result.satisfied ? "pass" : "fail"}`;
-        badge.textContent = result.satisfied ? "Satisfied" : "Violation";
+        badge.textContent = result.satisfied ? "Passed" : "Failed";
 
         const title = document.createElement("h3");
         title.textContent = name;
 
+        const summary = document.createElement("p");
+        summary.className = "norm-summary";
+        summary.textContent = result.satisfied ? "All requirements satisfied." : "Violations detected.";
+
+        const details = document.createElement("div");
+        details.className = "norm-details";
+        details.hidden = true;
+
         const explanation = document.createElement("p");
         explanation.textContent = result.explanation;
-
-        card.appendChild(badge);
-        card.appendChild(title);
-        card.appendChild(explanation);
+        details.appendChild(explanation);
 
         if (result.violations?.length) {
             const list = document.createElement("ul");
@@ -79,8 +84,17 @@ document.addEventListener("DOMContentLoaded", () => {
                 item.textContent = violation.explanation;
                 list.appendChild(item);
             });
-            card.appendChild(list);
+            details.appendChild(list);
         }
+
+        card.appendChild(badge);
+        card.appendChild(title);
+        card.appendChild(summary);
+        card.appendChild(details);
+
+        card.addEventListener("click", () => {
+            details.hidden = !details.hidden;
+        });
 
         return card;
     }
@@ -119,7 +133,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         const activeButton = saveReport ? saveReportBtn : analyzeBtn;
-        const label = saveReport ? "Analyze & Save Report" : "Analyze Normalization";
+        const label = saveReport ? "Analyze & Save Report" : "Analyze";
         setBusy(activeButton, true, "Analyzing...", label);
 
         try {

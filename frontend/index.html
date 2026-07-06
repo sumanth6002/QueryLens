@@ -4,40 +4,79 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>QueryLens</title>
-    <link rel="stylesheet" href="css/main.css">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
     <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/pages/home.css">
 </head>
-<body>
-    <header class="header">
-        <h1>QueryLens</h1>
-        <p class="tagline">SQL Schema Design &amp; Query Performance Analyzer</p>
-    </header>
+<body class="ql-app" data-page="dashboard">
+    <div class="ql-sidebar-overlay" id="sidebar-overlay"></div>
 
-    <main class="container">
-        <p>Open a feature page below. Authentication is disabled during development.</p>
+    <aside class="ql-sidebar" id="app-sidebar">
+        <div class="ql-sidebar-brand">
+            <a href="index.html">
+                <i data-lucide="scan-search"></i>
+                <div>
+                    QUERYLENS
+                    <span>Database Engineering</span>
+                </div>
+            </a>
+        </div>
+        <nav class="ql-nav" aria-label="Main">
+            <a href="index.html" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+            <a href="pages/schema-builder.html" data-nav="schema-builder"><i data-lucide="table-2"></i> Schema Builder</a>
+            <a href="pages/er-diagram.html" data-nav="er-diagram"><i data-lucide="git-branch"></i> ER Diagram</a>
+            <a href="pages/explain.html" data-nav="explain"><i data-lucide="workflow"></i> EXPLAIN</a>
+            <a href="pages/normalization.html" data-nav="normalization"><i data-lucide="layers"></i> Normalization</a>
+            <a href="pages/index-advisor.html" data-nav="index-advisor"><i data-lucide="zap"></i> Index Advisor</a>
+            <a href="pages/reports.html" data-nav="reports"><i data-lucide="file-text"></i> Reports</a>
+        </nav>
+        <div class="ql-sidebar-footer">
+            <a href="pages/settings.html" data-nav="settings"><i data-lucide="settings"></i> Settings</a>
+            <button type="button" id="theme-toggle" aria-label="Theme"><i data-lucide="moon"></i> Dark mode</button>
+        </div>
+    </aside>
 
-        <section class="home-panel">
-            <h2>Workspaces</h2>
-            <label>
-                Create workspace
-                <input type="text" id="workspace-name" placeholder="My Database Project">
-            </label>
-            <button type="button" id="create-workspace-btn" class="btn">Create Workspace</button>
-            <p id="workspace-status" class="home-status"></p>
-        </section>
+    <div class="ql-main">
+        <header class="ql-topbar">
+            <button type="button" class="btn btn-icon btn-secondary" id="sidebar-toggle" aria-label="Menu">
+                <i data-lucide="menu"></i>
+            </button>
+            <span class="ql-page-title">Dashboard</span>
+            <div class="ql-topbar-spacer"></div>
+            <span id="api-status" class="api-status"></span>
+        </header>
 
-        <ul>
-            <li><a href="pages/schema-builder.html">Schema Builder</a></li>
-            <li><a href="pages/er-diagram.html">ER Diagram Viewer</a></li>
-            <li><a href="pages/explain.html">EXPLAIN Visualizer</a></li>
-            <li><a href="pages/normalization.html">Normalization Checker</a></li>
-            <li><a href="pages/index-advisor.html">Index Advisor</a></li>
-        </ul>
-    </main>
+        <main class="ql-content page-enter">
+            <section class="hero">
+                <p class="hero-eyebrow">Database engineering toolkit</p>
+                <h1 class="hero-title">Design.<br>Analyze.<br>Optimize.</h1>
+                <p class="hero-subtitle">Schema design, execution plans, normalization analysis, and index recommendations — in one workspace.</p>
+            </section>
 
+            <section class="section">
+                <div class="section-header">
+                    <h2 class="section-heading">Workspaces</h2>
+                    <div class="toolbar-actions">
+                        <input type="text" id="workspace-name" class="input" placeholder="New workspace name" style="max-width:220px">
+                        <button type="button" id="create-workspace-btn" class="btn btn-primary">
+                            <i data-lucide="plus"></i>
+                            <span class="btn-label">New Workspace</span>
+                        </button>
+                    </div>
+                </div>
+                <p id="workspace-status" class="status-line"></p>
+                <div id="workspace-list" class="card-grid"></div>
+            </section>
+        </main>
+    </div>
+
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="js/config.js"></script>
     <script src="js/api.js"></script>
     <script src="js/ui.js"></script>
+    <script src="js/shell.js"></script>
     <script src="js/main.js"></script>
 </body>
 </html>

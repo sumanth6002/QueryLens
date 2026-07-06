@@ -69,7 +69,11 @@ def validate_column(column: dict) -> dict:
     }
 
 
-def validate_foreign_key(foreign_key: dict, table_names: set[str]) -> dict:
+def validate_foreign_key(
+    foreign_key: dict,
+    table_names: set[str],
+    table_map: dict[str, dict] | None = None,
+) -> dict:
     if not isinstance(foreign_key, dict):
         raise ValidationError("Each foreign key must be an object.")
 
@@ -97,6 +101,19 @@ def validate_foreign_key(foreign_key: dict, table_names: set[str]) -> dict:
     if len(cleaned_columns) != len(cleaned_referenced_columns):
         raise ValidationError("Foreign key column counts must match referenced column counts.")
 
+    if table_map and referenced_table in table_map:
+        parent_columns = {
+            column["name"] for column in table_map[referenced_table].get("columns", [])
+        }
+        missing_parent = [
+            column for column in cleaned_referenced_columns if column not in parent_columns
+        ]
+        if missing_parent:
+            raise ValidationError(
+                f"Referenced columns not found on table '{referenced_table}': "
+                f"{', '.join(missing_parent)}"
+            )
+
     on_delete = (foreign_key.get("on_delete") or "RESTRICT").upper()
     if on_delete not in {"RESTRICT", "CASCADE", "SET NULL", "NO ACTION"}:
         raise ValidationError("on_delete must be RESTRICT, CASCADE, SET NULL, or NO ACTION.")
@@ -119,6 +136,7 @@ def validate_table_payload(
     *,
     existing_table_names: set[str] | None = None,
     current_name: str | None = None,
+    schema_tables: list[dict] | None = None,
 ) -> dict:
     if not isinstance(payload, dict):
         raise ValidationError("Table payload must be an object.")
@@ -128,26 +146,34 @@ def validate_table_payload(
 
     if current_name is None and name in existing_table_names:
         raise ConflictError(f"Table '{name}' already exists.")
+    if current_name and name != current_name and name in existing_table_names:
+        raise ConflictError(f"Table '{name}' already exists.")
 
     columns = payload.get("columns", [])
     if not columns:
         raise ValidationError("A table must have at least one column.")
 
     validated_columns = [validate_column(column) for column in columns]
-    column_names = {column["name"] for column in validated_columns}
+    column_names = [column["name"] for column in validated_columns]
+    if len(column_names) != len(set(column_names)):
+        raise ValidationError("Duplicate column names are not allowed in a table.")
+
+    column_name_set = set(column_names)
 
     primary_key = payload.get("primary_key", [])
     if primary_key:
         primary_key = [validate_identifier(column, "Primary key column") for column in primary_key]
-        missing = [column for column in primary_key if column not in column_names]
+        missing = [column for column in primary_key if column not in column_name_set]
         if missing:
             raise ValidationError(f"Primary key columns not found: {', '.join(missing)}")
 
     table_names_for_fk = set(existing_table_names)
     table_names_for_fk.add(name)
 
+    table_map = {table["name"]: table for table in (schema_tables or [])}
+
     foreign_keys = [
-        validate_foreign_key(foreign_key, table_names_for_fk)
+        validate_foreign_key(foreign_key, table_names_for_fk, table_map or None)
         for foreign_key in payload.get("foreign_keys", [])
     ]
 

@@ -4,101 +4,99 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Schema Builder — QueryLens</title>
-    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components.css">
-    <link rel="stylesheet" href="../css/schema-builder.css">
+    <link rel="stylesheet" href="../css/pages/schema-builder.css">
 </head>
-<body>
-    <header class="header">
-        <h1><a href="../index.html">QueryLens</a></h1>
-        <p class="tagline">Schema Builder</p>
-    </header>
-
-    <main class="container schema-page">
-        <section class="schema-toolbar">
-            <label>
-                Workspace
-                <select id="workspace-select">
-                    <option value="">Select a workspace</option>
-                </select>
-            </label>
-
-            <div class="schema-toolbar-actions">
-                <button type="button" id="load-schema-btn" class="btn">Load Schema</button>
-                <button type="button" id="refresh-workspaces-btn" class="btn btn-secondary">Refresh Workspaces</button>
-                <a id="er-diagram-link" class="btn btn-secondary" href="er-diagram.html">View ER Diagram</a>
+<body class="ql-app" data-page="schema-builder">
+    <div class="ql-sidebar-overlay" id="sidebar-overlay"></div>
+    <aside class="ql-sidebar" id="app-sidebar">
+        <div class="ql-sidebar-brand">
+            <a href="../index.html"><i data-lucide="scan-search"></i><div>QUERYLENS<span>Database Engineering</span></div></a>
+        </div>
+        <div class="ql-sidebar-section">
+            <div class="ql-sidebar-label">Workspace</div>
+            <select id="workspace-select" class="select"><option value="">Select workspace</option></select>
+        </div>
+        <nav class="ql-nav" aria-label="Main">
+            <a href="../index.html" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+            <a href="schema-builder.html" data-nav="schema-builder"><i data-lucide="table-2"></i> Schema Builder</a>
+            <a href="er-diagram.html" data-nav="er-diagram"><i data-lucide="git-branch"></i> ER Diagram</a>
+            <a href="explain.html" data-nav="explain"><i data-lucide="workflow"></i> EXPLAIN</a>
+            <a href="normalization.html" data-nav="normalization"><i data-lucide="layers"></i> Normalization</a>
+            <a href="index-advisor.html" data-nav="index-advisor"><i data-lucide="zap"></i> Index Advisor</a>
+            <a href="reports.html" data-nav="reports"><i data-lucide="file-text"></i> Reports</a>
+        </nav>
+        <div class="ql-sidebar-footer">
+            <a href="settings.html" data-nav="settings"><i data-lucide="settings"></i> Settings</a>
+        </div>
+    </aside>
+    <div class="ql-main">
+        <header class="ql-topbar">
+            <button type="button" class="btn btn-icon btn-secondary" id="sidebar-toggle"><i data-lucide="menu"></i></button>
+            <span class="ql-page-title">Schema Builder</span>
+            <div class="ql-topbar-spacer"></div>
+            <div class="toolbar-actions">
+                <button type="button" id="load-schema-btn" class="btn btn-secondary btn-small">Reload</button>
+                <button type="button" id="refresh-workspaces-btn" class="btn btn-icon btn-secondary" title="Refresh"><i data-lucide="refresh-cw"></i></button>
+                <a id="er-diagram-link" class="btn btn-secondary btn-small" href="er-diagram.html">ER Diagram</a>
             </div>
-        </section>
-
-        <div id="error-banner" class="banner-error" hidden></div>
-        <div id="info-banner" class="banner-info" hidden></div>
-
-        <div class="schema-layout">
-            <aside class="schema-panel schema-sidebar">
-                <div class="schema-sidebar-header">
-                    <h2>Tables</h2>
-                    <button type="button" id="new-table-btn" class="btn btn-small">+ New Table</button>
-                </div>
-                <ul id="table-list" class="table-list">
-                    <li class="table-list-empty">Load a workspace to see tables.</li>
-                </ul>
-            </aside>
-
-            <section class="schema-panel schema-editor" id="editor-panel" hidden>
-                <h2 id="editor-title">New Table</h2>
-
-                <label>
-                    Table Name
-                    <input type="text" id="table-name-input" placeholder="users">
-                </label>
-
-                <div class="columns-section">
+        </header>
+        <main class="ql-content ql-content--wide page-enter">
+            <div id="error-banner" class="banner-error" hidden></div>
+            <div id="info-banner" class="banner-info" hidden></div>
+            <div class="schema-layout">
+                <aside class="schema-tables card">
                     <div class="section-header">
-                        <h3>Columns</h3>
-                        <button type="button" id="add-column-btn" class="btn btn-small btn-secondary">+ Add Column</button>
+                        <h2 class="section-heading" style="font-size:1rem">Tables</h2>
+                        <button type="button" id="new-table-btn" class="btn btn-small btn-secondary"><i data-lucide="plus"></i> New</button>
                     </div>
-                    <div class="columns-table-wrap">
-                        <table class="columns-table">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Type</th>
-                                    <th>PK</th>
-                                    <th>Nullable</th>
-                                    <th>Auto Inc.</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
+                    <ul id="table-list" class="schema-table-list">
+                        <li class="empty-state" style="padding:2rem 1rem;border:none;background:transparent"><p>Load a workspace</p></li>
+                    </ul>
+                </aside>
+                <section class="schema-editor card" id="editor-panel" hidden>
+                    <h2 id="editor-title" class="section-heading" style="margin-bottom:1.25rem">New Table</h2>
+                    <div class="field" style="margin-bottom:1.25rem">
+                        <label class="field-label" for="table-name-input">Table name</label>
+                        <input type="text" id="table-name-input" class="input" placeholder="users">
+                    </div>
+                    <div class="section-header">
+                        <span class="section-title">Columns</span>
+                        <button type="button" id="add-column-btn" class="btn btn-small btn-secondary"><i data-lucide="plus"></i> Add column</button>
+                    </div>
+                    <div class="data-table-wrap" style="margin-bottom:1.5rem">
+                        <table class="data-table columns-table">
+                            <thead><tr><th>Name</th><th>Type</th><th>PK</th><th>Null</th><th>AI</th><th></th></tr></thead>
                             <tbody id="columns-body"></tbody>
                         </table>
                     </div>
-                </div>
-
-                <div class="fk-section">
                     <div class="section-header">
-                        <h3>Foreign Keys</h3>
-                        <button type="button" id="add-fk-btn" class="btn btn-small btn-secondary">+ Add FK</button>
+                        <span class="section-title">Foreign keys</span>
+                        <button type="button" id="add-fk-btn" class="btn btn-small btn-secondary"><i data-lucide="plus"></i> Add FK</button>
                     </div>
-                    <div id="fk-list" class="fk-list"></div>
-                </div>
-
-                <div class="schema-editor-actions">
-                    <button type="button" id="save-table-btn" class="btn">Save Table</button>
-                    <button type="button" id="delete-table-btn" class="btn btn-danger" hidden>Delete Table</button>
-                    <button type="button" id="preview-sql-btn" class="btn btn-secondary">Preview SQL</button>
-                </div>
+                    <div id="fk-list" class="fk-list" style="margin-bottom:1.5rem"></div>
+                    <div class="toolbar-actions" style="margin:0">
+                        <button type="button" id="save-table-btn" class="btn btn-primary"><span class="btn-label">Save table</span></button>
+                        <button type="button" id="delete-table-btn" class="btn btn-danger" hidden>Delete</button>
+                        <button type="button" id="preview-sql-btn" class="btn btn-secondary">Preview SQL</button>
+                        <button type="button" id="execute-schema-btn" class="btn btn-secondary">Execute on MySQL</button>
+                    </div>
+                </section>
+            </div>
+            <section class="card" id="sql-preview-panel" hidden style="margin-top:1.5rem">
+                <h2 class="section-heading" style="font-size:1rem;margin-bottom:1rem">SQL preview</h2>
+                <pre id="sql-preview-output" class="code-block"></pre>
             </section>
-        </div>
-
-        <section class="schema-panel sql-preview-panel" id="sql-preview-panel" hidden>
-            <h2>SQL Preview</h2>
-            <pre id="sql-preview-output"></pre>
-        </section>
-    </main>
-
+        </main>
+    </div>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="../js/config.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/ui.js"></script>
+    <script src="../js/shell.js"></script>
     <script src="../js/workspaces.js"></script>
     <script src="../js/schema-builder.js"></script>
 </body>

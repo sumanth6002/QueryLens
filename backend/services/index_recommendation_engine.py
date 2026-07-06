@@ -26,8 +26,8 @@ def _group_columns_by_table(columns: list[dict]) -> dict[str, list[str]]:
     return grouped
 
 
-def _recommendation_key(table: str, columns: list[str], clause: str) -> tuple:
-    return (table, tuple(columns), clause)
+def _recommendation_key(table: str, columns: list[str]) -> tuple:
+    return (table, tuple(columns))
 
 
 def _add_recommendation(
@@ -43,8 +43,17 @@ def _add_recommendation(
     if not table or not columns:
         return
 
-    key = _recommendation_key(table, columns, clause)
+    key = _recommendation_key(table, columns)
     if key in seen:
+        for item in recommendations:
+            if item["table"] == table and tuple(item["columns"]) == tuple(columns):
+                if clause not in item.get("clauses", []):
+                    item.setdefault("clauses", [item["clause"]])
+                    item["clauses"].append(clause)
+                    item["explanation"] += f" Also supports {clause}."
+                priority_order = {"high": 0, "medium": 1, "low": 2}
+                if priority_order[priority] < priority_order[item["priority"]]:
+                    item["priority"] = priority
         return
 
     seen.add(key)
@@ -52,6 +61,7 @@ def _add_recommendation(
         "table": table,
         "columns": columns,
         "clause": clause,
+        "clauses": [clause],
         "priority": priority,
         "index_name": _index_name(table, columns),
         "sql": _create_index_sql(table, columns),
@@ -108,27 +118,12 @@ def generate_index_recommendations(parsed_query: dict, known_tables: set[str] | 
                 recommendations,
                 seen,
                 table=table,
-                columns=columns[:1],
+                columns=columns,
                 clause="JOIN",
                 priority="high",
                 explanation=(
-                    f"`{table}` participates in a JOIN via `{columns[0]}`. "
-                    f"Indexing the join column speeds up nested-loop and hash join lookups."
-                ),
-            )
-
-        if len(grouped) >= 2:
-            tables = list(grouped.keys())
-            _add_recommendation(
-                recommendations,
-                seen,
-                table=tables[0],
-                columns=grouped[tables[0]][:1],
-                clause="JOIN",
-                priority="medium",
-                explanation=(
-                    f"JOIN condition `{join['condition']}` benefits from indexes on both "
-                    f"`{tables[0]}` and `{tables[1]}` join keys."
+                    f"`{table}` participates in a JOIN via ({', '.join(columns)}). "
+                    f"Indexing the join column(s) speeds up nested-loop and hash join lookups."
                 ),
             )
 

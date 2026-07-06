@@ -34,6 +34,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const saveTableBtn = document.getElementById("save-table-btn");
     const deleteTableBtn = document.getElementById("delete-table-btn");
     const previewSqlBtn = document.getElementById("preview-sql-btn");
+    const executeSchemaBtn = document.getElementById("execute-schema-btn");
     const sqlPreviewPanel = document.getElementById("sql-preview-panel");
     const sqlPreviewOutput = document.getElementById("sql-preview-output");
     const errorBanner = document.getElementById("error-banner");
@@ -311,9 +312,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
         if (!schemaTables.length) {
             const emptyItem = document.createElement("li");
-            emptyItem.className = "table-list-empty";
-            emptyItem.textContent = "No tables yet. Click “New Table” to add one.";
+            emptyItem.style.listStyle = "none";
+            emptyItem.innerHTML = `
+                <div class="empty-state" style="padding:2rem 1rem;border-style:dashed">
+                    <i data-lucide="table-2"></i>
+                    <h3>No tables yet</h3>
+                    <p>Create your first table to start building the schema.</p>
+                </div>
+            `;
             tableList.appendChild(emptyItem);
+            if (typeof lucide !== "undefined") lucide.createIcons();
             return;
         }
 
@@ -462,7 +470,12 @@ document.addEventListener("DOMContentLoaded", () => {
             return;
         }
 
-        const confirmed = window.confirm(`Delete table "${editingTableName}"?`);
+        const confirmed = await showConfirm({
+            title: "Delete table",
+            message: `Delete table "${editingTableName}"? This cannot be undone.`,
+            confirmLabel: "Delete",
+            danger: true,
+        });
         if (!confirmed) {
             return;
         }
@@ -483,6 +496,13 @@ document.addEventListener("DOMContentLoaded", () => {
         }
     }
 
+    function formatSqlStatements(statements) {
+        return (statements || [])
+            .map((item) => (typeof item === "string" ? item : item.sql))
+            .filter(Boolean)
+            .join("\n\n");
+    }
+
     async function previewSql() {
         clearError(errorBanner);
 
@@ -499,11 +519,39 @@ document.addEventListener("DOMContentLoaded", () => {
         try {
             const data = await previewSchemaSql(workspaceId, tableName || null);
             sqlPreviewPanel.hidden = false;
-            sqlPreviewOutput.textContent = (data.statements || []).join("\n\n") || "No SQL to preview.";
+            sqlPreviewOutput.textContent = formatSqlStatements(data.statements) || "No SQL to preview.";
         } catch (error) {
             showError(errorBanner, error.message);
         } finally {
             setBusy(previewSqlBtn, false, "Loading...", "Preview SQL");
+        }
+    }
+
+    async function executeSchemaOnMysql() {
+        clearError(errorBanner);
+        clearInfo(infoBanner);
+
+        const workspaceId = workspaceSelect.value;
+        if (!workspaceId) {
+            showError(errorBanner, "Select a workspace first.");
+            return;
+        }
+
+        const tableName = editingTableName || tableNameInput.value.trim() || null;
+        setBusy(executeSchemaBtn, true, "Executing...", "Execute on MySQL");
+
+        try {
+            const data = await executeSchema(workspaceId, tableName);
+            if (!data.executed) {
+                showError(errorBanner, data.message || "Schema execution failed.");
+                return;
+            }
+            const tables = (data.statements || []).map((item) => item.table).filter(Boolean);
+            showInfo(infoBanner, `Created tables in ${data.database}: ${tables.join(", ") || "none"}.`);
+        } catch (error) {
+            showError(errorBanner, error.message);
+        } finally {
+            setBusy(executeSchemaBtn, false, "Executing...", "Execute on MySQL");
         }
     }
 
@@ -571,7 +619,16 @@ document.addEventListener("DOMContentLoaded", () => {
         previewSqlBtn.addEventListener("click", previewSql);
     }
 
-    workspaceSelect.addEventListener("change", updateErDiagramLink);
+    if (executeSchemaBtn) {
+        executeSchemaBtn.addEventListener("click", executeSchemaOnMysql);
+    }
+
+    workspaceSelect.addEventListener("change", async () => {
+        updateErDiagramLink();
+        if (workspaceSelect.value) {
+            await loadSchema();
+        }
+    });
 
     initWorkspaceSelect(workspaceSelect, {
         onReady: async () => {

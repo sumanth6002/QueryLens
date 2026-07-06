@@ -1,0 +1,199 @@
+.ql-app {
+    display: flex;
+    min-height: 100vh;
+    background: var(--bg);
+}
+
+.ql-sidebar-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    z-index: 40;
+}
+
+.ql-sidebar-overlay.is-open {
+    display: block;
+}
+
+.ql-sidebar {
+    width: var(--sidebar-width);
+    flex-shrink: 0;
+    background: var(--bg-secondary);
+    border-right: 1px solid var(--border);
+    display: flex;
+    flex-direction: column;
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    z-index: 50;
+}
+
+.ql-sidebar-brand {
+    padding: 1.5rem 1.25rem 1rem;
+    border-bottom: 1px solid var(--border);
+}
+
+.ql-sidebar-brand a {
+    display: flex;
+    align-items: center;
+    gap: 0.65rem;
+    font-weight: 900;
+    font-size: 0.95rem;
+    letter-spacing: 0.06em;
+}
+
+.ql-sidebar-brand span {
+    color: var(--text-secondary);
+    font-weight: 500;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    display: block;
+    margin-top: 0.15rem;
+}
+
+.ql-sidebar-section {
+    padding: 1rem 1rem 0.5rem;
+}
+
+.ql-sidebar-label {
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    margin-bottom: 0.5rem;
+    padding: 0 0.5rem;
+}
+
+.ql-nav {
+    flex: 1;
+    padding: 0.5rem 0.75rem;
+    overflow-y: auto;
+}
+
+.ql-nav a {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.65rem 0.75rem;
+    border-radius: 12px;
+    color: var(--text-secondary);
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: background var(--transition), color var(--transition), transform var(--transition);
+}
+
+.ql-nav a:hover {
+    background: var(--hover);
+    color: var(--text);
+    transform: scale(1.02);
+}
+
+.ql-nav a.is-active {
+    background: var(--card);
+    color: var(--text);
+    border: 1px solid var(--border);
+}
+
+.ql-nav a i,
+.ql-nav a svg {
+    width: 18px;
+    height: 18px;
+    opacity: 0.85;
+}
+
+.ql-sidebar-footer {
+    padding: 1rem;
+    border-top: 1px solid var(--border);
+    display: grid;
+    gap: 0.35rem;
+}
+
+.ql-sidebar-footer a,
+.ql-sidebar-footer button {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.6rem 0.75rem;
+    border-radius: 12px;
+    background: transparent;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background var(--transition), color var(--transition);
+    width: 100%;
+    text-align: left;
+}
+
+.ql-sidebar-footer a:hover,
+.ql-sidebar-footer button:hover {
+    background: var(--hover);
+    color: var(--text);
+}
+
+.ql-main {
+    flex: 1;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.ql-topbar {
+    height: var(--topbar-height);
+    border-bottom: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 1.5rem;
+    background: var(--bg);
+    position: sticky;
+    top: 0;
+    z-index: 30;
+}
+
+.ql-page-title {
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--text-secondary);
+}
+
+.ql-topbar-spacer {
+    flex: 1;
+}
+
+.ql-content {
+    flex: 1;
+    padding: 2rem 2rem 3rem;
+    max-width: 1400px;
+    width: 100%;
+}
+
+.ql-content--wide {
+    max-width: none;
+}
+
+.ql-content--flush {
+    padding: 0;
+}
+
+@media (max-width: 900px) {
+    .ql-sidebar {
+        position: fixed;
+        left: 0;
+        transform: translateX(-100%);
+        transition: transform var(--transition);
+    }
+
+    .ql-sidebar.is-open {
+        transform: translateX(0);
+    }
+
+    .ql-content {
+        padding: 1.25rem;
+    }
+}

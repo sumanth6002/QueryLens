@@ -4,49 +4,70 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ER Diagram — QueryLens</title>
-    <link rel="stylesheet" href="../css/main.css">
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components.css">
-    <link rel="stylesheet" href="../css/er-diagram.css">
+    <link rel="stylesheet" href="../css/pages/er-diagram.css">
 </head>
-<body>
-    <header class="header">
-        <h1><a href="../index.html">QueryLens</a></h1>
-        <p class="tagline">Entity-Relationship Diagram</p>
-    </header>
-
-    <main class="container er-page">
-        <section class="er-controls">
-            <label>
-                Workspace
-                <select id="workspace-select">
-                    <option value="">Select a workspace</option>
-                </select>
-            </label>
-
-            <div class="er-actions">
-                <button type="button" id="load-diagram-btn" class="btn">Load ER Diagram</button>
-                <button type="button" id="refresh-workspaces-btn" class="btn btn-secondary">Refresh Workspaces</button>
+<body class="ql-app" data-page="er-diagram">
+    <div class="ql-sidebar-overlay" id="sidebar-overlay"></div>
+    <aside class="ql-sidebar" id="app-sidebar">
+        <div class="ql-sidebar-brand">
+            <a href="../index.html"><i data-lucide="scan-search"></i><div>QUERYLENS<span>Database Engineering</span></div></a>
+        </div>
+        <div class="ql-sidebar-section">
+            <div class="ql-sidebar-label">Workspace</div>
+            <select id="workspace-select" class="select"><option value="">Select workspace</option></select>
+        </div>
+        <nav class="ql-nav" aria-label="Main">
+            <a href="../index.html" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+            <a href="schema-builder.html" data-nav="schema-builder"><i data-lucide="table-2"></i> Schema Builder</a>
+            <a href="er-diagram.html" data-nav="er-diagram"><i data-lucide="git-branch"></i> ER Diagram</a>
+            <a href="explain.html" data-nav="explain"><i data-lucide="workflow"></i> EXPLAIN</a>
+            <a href="normalization.html" data-nav="normalization"><i data-lucide="layers"></i> Normalization</a>
+            <a href="index-advisor.html" data-nav="index-advisor"><i data-lucide="zap"></i> Index Advisor</a>
+            <a href="reports.html" data-nav="reports"><i data-lucide="file-text"></i> Reports</a>
+        </nav>
+        <div class="ql-sidebar-footer">
+            <a href="settings.html" data-nav="settings"><i data-lucide="settings"></i> Settings</a>
+        </div>
+    </aside>
+    <div class="ql-main ql-main--flush">
+        <header class="ql-topbar">
+            <button type="button" class="btn btn-icon btn-secondary" id="sidebar-toggle"><i data-lucide="menu"></i></button>
+            <span class="ql-page-title">ER Diagram</span>
+            <div class="ql-topbar-spacer"></div>
+            <div id="diagram-meta" class="diagram-meta" hidden></div>
+            <div class="toolbar-actions">
+                <button type="button" id="zoom-in-btn" class="btn btn-icon btn-secondary" title="Zoom in"><i data-lucide="zoom-in"></i></button>
+                <button type="button" id="zoom-out-btn" class="btn btn-icon btn-secondary" title="Zoom out"><i data-lucide="zoom-out"></i></button>
+                <button type="button" id="fit-btn" class="btn btn-small btn-secondary">Fit</button>
+                <button type="button" id="export-png-btn" class="btn btn-small btn-secondary">Export PNG</button>
+                <button type="button" id="fullscreen-btn" class="btn btn-icon btn-secondary" title="Fullscreen"><i data-lucide="maximize-2"></i></button>
+                <button type="button" id="load-diagram-btn" class="btn btn-primary btn-small"><span class="btn-label">Load</span></button>
+                <button type="button" id="refresh-workspaces-btn" class="btn btn-icon btn-secondary" title="Refresh"><i data-lucide="refresh-cw"></i></button>
             </div>
-        </section>
-
-        <div id="error-banner" class="banner-error" hidden></div>
-
-        <div id="diagram-meta" class="er-meta" hidden></div>
-
-        <section id="diagram-panel" class="er-diagram-panel empty">
-            <p>Choose a workspace and load the ER diagram.</p>
-        </section>
-
-        <section class="er-source">
-            <h2>Mermaid Source</h2>
-            <pre id="mermaid-source">No diagram loaded.</pre>
-        </section>
-    </main>
-
+        </header>
+        <main class="ql-content ql-content--flush page-enter">
+            <div id="error-banner" class="banner-error" style="margin:1rem" hidden></div>
+            <div class="diagram-viewport" id="diagram-viewport">
+                <div id="diagram-panel" class="diagram-canvas empty">
+                    <p>Select a workspace and load the ER diagram.</p>
+                </div>
+            </div>
+            <details class="diagram-source card" style="margin:1rem">
+                <summary>Mermaid source</summary>
+                <pre id="mermaid-source" class="code-block">No diagram loaded.</pre>
+            </details>
+        </main>
+    </div>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
     <script src="../js/config.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/ui.js"></script>
+    <script src="../js/shell.js"></script>
     <script src="../js/workspaces.js"></script>
     <script src="../js/er-diagram.js"></script>
 </body>

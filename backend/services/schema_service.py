@@ -27,7 +27,11 @@ class SchemaService:
         schema_data = deepcopy(snapshot.schema_data or empty_schema())
         existing_names = {table["name"] for table in schema_data.get("tables", [])}
 
-        table = validate_table_payload(payload, existing_table_names=existing_names)
+        table = validate_table_payload(
+            payload,
+            existing_table_names=existing_names,
+            schema_tables=schema_data.get("tables", []),
+        )
         schema_data.setdefault("tables", []).append(table)
 
         return self._save_snapshot(snapshot, schema_data)
@@ -44,8 +48,9 @@ class SchemaService:
         table = find_table(schema_data, table_name)
         existing_names = {name for name in (t["name"] for t in schema_data.get("tables", []))}
 
+        new_name = payload.get("name", table_name)
         merged = {
-            "name": table_name,
+            "name": new_name,
             "columns": payload.get("columns", table.get("columns", [])),
             "primary_key": payload.get("primary_key", table.get("primary_key", [])),
             "foreign_keys": payload.get("foreign_keys", table.get("foreign_keys", [])),
@@ -55,7 +60,14 @@ class SchemaService:
             merged,
             existing_table_names=existing_names - {table_name},
             current_name=table_name,
+            schema_tables=schema_data.get("tables", []),
         )
+
+        if validated["name"] != table_name:
+            for other in schema_data.get("tables", []):
+                for foreign_key in other.get("foreign_keys", []):
+                    if foreign_key.get("referenced_table") == table_name:
+                        foreign_key["referenced_table"] = validated["name"]
 
         tables = []
         for current in schema_data.get("tables", []):

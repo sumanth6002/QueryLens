@@ -11,13 +11,20 @@ document.addEventListener("DOMContentLoaded", () => {
     const errorBanner = document.getElementById("error-banner");
     const infoBanner = document.getElementById("info-banner");
 
+    async function copyText(text) {
+        await navigator.clipboard.writeText(text);
+        showInfo(infoBanner, "SQL copied to clipboard.");
+    }
+
     function renderSummary(summary) {
         summaryPanel.innerHTML = `
-            <div class="summary-card"><strong>${escapeHtml(summary.total)}</strong><span>Total</span></div>
-            <div class="summary-card"><strong>${escapeHtml(summary.high_priority)}</strong><span>High priority</span></div>
-            <div class="summary-card"><strong>${escapeHtml(summary.medium_priority)}</strong><span>Medium priority</span></div>
-            <div class="summary-card"><strong>${escapeHtml(summary.by_clause.WHERE)}</strong><span>WHERE</span></div>
-            <div class="summary-card"><strong>${escapeHtml(summary.by_clause.JOIN)}</strong><span>JOIN</span></div>
+            <div class="metric-card"><strong>${escapeHtml(summary.total)}</strong><span>Total</span></div>
+            <div class="metric-card"><strong>${escapeHtml(summary.high_priority)}</strong><span>High priority</span></div>
+            <div class="metric-card"><strong>${escapeHtml(summary.medium_priority)}</strong><span>Medium priority</span></div>
+            <div class="metric-card"><strong>${escapeHtml(summary.by_clause.WHERE)}</strong><span>WHERE</span></div>
+            <div class="metric-card"><strong>${escapeHtml(summary.by_clause.JOIN)}</strong><span>JOIN</span></div>
+            <div class="metric-card"><strong>${escapeHtml(summary.by_clause["GROUP BY"])}</strong><span>GROUP BY</span></div>
+            <div class="metric-card"><strong>${escapeHtml(summary.by_clause["ORDER BY"])}</strong><span>ORDER BY</span></div>
         `;
     }
 
@@ -25,35 +32,58 @@ document.addEventListener("DOMContentLoaded", () => {
         recommendationsList.innerHTML = "";
 
         if (!recommendations.length) {
-            const empty = document.createElement("p");
-            empty.textContent = "No index recommendations for this query.";
-            recommendationsList.appendChild(empty);
+            renderEmptyState(recommendationsList, {
+                icon: "zap",
+                title: "No index recommendations",
+                message: "This query does not suggest any new indexes based on current analysis.",
+            });
             return;
         }
 
         recommendations.forEach((item) => {
             const card = document.createElement("article");
-            card.className = `recommendation-card ${item.priority}`;
+            card.className = `index-rec-card ${item.priority}`;
+
+            const header = document.createElement("div");
+            header.className = "index-rec-header";
 
             const title = document.createElement("h3");
             title.textContent = item.index_name;
 
+            const copyBtn = document.createElement("button");
+            copyBtn.type = "button";
+            copyBtn.className = "btn btn-small btn-secondary";
+            copyBtn.innerHTML = '<i data-lucide="copy"></i> Copy';
+            copyBtn.addEventListener("click", (e) => {
+                e.stopPropagation();
+                copyText(item.sql);
+            });
+
+            header.appendChild(title);
+            header.appendChild(copyBtn);
+
             const meta = document.createElement("div");
-            meta.className = "recommendation-meta";
+            meta.className = "index-rec-meta";
             meta.textContent = `Table: ${item.table} · Clause: ${item.clause} · Priority: ${item.priority}`;
 
-            const explanation = document.createElement("p");
-            explanation.textContent = item.explanation;
+            const reason = document.createElement("p");
+            reason.className = "index-rec-reason";
+            reason.textContent = item.explanation;
 
+            const sqlWrap = document.createElement("div");
+            sqlWrap.className = "index-rec-sql";
             const sql = document.createElement("pre");
             sql.textContent = item.sql;
+            sqlWrap.appendChild(sql);
 
-            card.appendChild(title);
+            card.appendChild(header);
             card.appendChild(meta);
-            card.appendChild(explanation);
-            card.appendChild(sql);
+            card.appendChild(reason);
+            card.appendChild(sqlWrap);
             recommendationsList.appendChild(card);
         });
+
+        if (typeof lucide !== "undefined") lucide.createIcons();
     }
 
     async function handleAnalyze(save) {

@@ -1,0 +1,45 @@
+.reports-section .section-heading {
+    margin-bottom: 1rem;
+}
+
+.report-list {
+    display: grid;
+    gap: 0.75rem;
+}
+
+.report-item {
+    padding: 1.25rem;
+    border-radius: var(--radius-card);
+    border: 1px solid var(--border);
+    background: var(--card);
+}
+
+.report-item-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.5rem;
+}
+
+.report-item-header h3 {
+    font-size: 0.95rem;
+    font-weight: 700;
+}
+
+.report-item-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+}
+
+.report-item pre {
+    margin-top: 0.75rem;
+    padding: 0.85rem;
+    background: var(--bg);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    font-family: var(--font-mono);
+    font-size: 0.75rem;
+    overflow-x: auto;
+    max-height: 200px;
+}

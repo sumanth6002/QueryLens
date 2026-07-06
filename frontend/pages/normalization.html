@@ -3,78 +3,88 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Normalization Checker — QueryLens</title>
-    <link rel="stylesheet" href="../css/main.css">
+    <title>Normalization — QueryLens</title>
+    <link rel="stylesheet" href="../css/variables.css">
+    <link rel="stylesheet" href="../css/base.css">
+    <link rel="stylesheet" href="../css/layout.css">
     <link rel="stylesheet" href="../css/components.css">
-    <link rel="stylesheet" href="../css/normalization.css">
+    <link rel="stylesheet" href="../css/pages/normalization.css">
 </head>
-<body>
-    <header class="header">
-        <h1><a href="../index.html">QueryLens</a></h1>
-        <p class="tagline">Normalization Checker (1NF – BCNF)</p>
-    </header>
-
-    <main class="container normalization-page">
-        <div class="norm-layout">
-            <section class="norm-panel">
-                <label>
-                    Workspace
-                    <select id="workspace-select">
-                        <option value="">Select a workspace</option>
-                    </select>
-                </label>
-
-                <label>
-                    Attributes (one per line)
-                    <textarea id="attributes-input">StudentID
-CourseID
-StudentName
-Grade</textarea>
-                </label>
-
-                <label>
-                    Functional Dependencies (JSON)
-                    <textarea id="fds-input">[
-  { "determinants": ["StudentID"], "dependents": ["StudentName"] },
-  { "determinants": ["StudentID", "CourseID"], "dependents": ["Grade"] }
-]</textarea>
-                </label>
-
-                <label>
-                    Multivalued Attributes (comma-separated, optional)
-                    <input type="text" id="multivalued-input" placeholder="Hobby, Phone">
-                </label>
-
-                <label>
-                    Closure Of (comma-separated, optional)
-                    <input type="text" id="closure-input" placeholder="StudentID">
-                </label>
-
-                <div class="norm-actions">
-                    <button type="button" id="analyze-btn" class="btn">Analyze Normalization</button>
-                    <button type="button" id="save-report-btn" class="btn btn-secondary">Analyze &amp; Save Report</button>
-                    <button type="button" id="refresh-workspaces-btn" class="btn btn-secondary">Refresh Workspaces</button>
-                </div>
-            </section>
-
+<body class="ql-app" data-page="normalization">
+    <div class="ql-sidebar-overlay" id="sidebar-overlay"></div>
+    <aside class="ql-sidebar" id="app-sidebar">
+        <div class="ql-sidebar-brand">
+            <a href="../index.html"><i data-lucide="scan-search"></i><div>QUERYLENS<span>Database Engineering</span></div></a>
+        </div>
+        <div class="ql-sidebar-section">
+            <div class="ql-sidebar-label">Workspace</div>
+            <select id="workspace-select" class="select"><option value="">Select workspace</option></select>
+        </div>
+        <nav class="ql-nav" aria-label="Main">
+            <a href="../index.html" data-nav="dashboard"><i data-lucide="layout-dashboard"></i> Dashboard</a>
+            <a href="schema-builder.html" data-nav="schema-builder"><i data-lucide="table-2"></i> Schema Builder</a>
+            <a href="er-diagram.html" data-nav="er-diagram"><i data-lucide="git-branch"></i> ER Diagram</a>
+            <a href="explain.html" data-nav="explain"><i data-lucide="workflow"></i> EXPLAIN</a>
+            <a href="normalization.html" data-nav="normalization"><i data-lucide="layers"></i> Normalization</a>
+            <a href="index-advisor.html" data-nav="index-advisor"><i data-lucide="zap"></i> Index Advisor</a>
+            <a href="reports.html" data-nav="reports"><i data-lucide="file-text"></i> Reports</a>
+        </nav>
+        <div class="ql-sidebar-footer">
+            <a href="settings.html" data-nav="settings"><i data-lucide="settings"></i> Settings</a>
+        </div>
+    </aside>
+    <div class="ql-main">
+        <header class="ql-topbar">
+            <button type="button" class="btn btn-icon btn-secondary" id="sidebar-toggle"><i data-lucide="menu"></i></button>
+            <span class="ql-page-title">Normalization</span>
+            <div class="ql-topbar-spacer"></div>
+            <button type="button" id="refresh-workspaces-btn" class="btn btn-icon btn-secondary" title="Refresh"><i data-lucide="refresh-cw"></i></button>
+        </header>
+        <main class="ql-content page-enter">
             <div id="error-banner" class="banner-error" hidden></div>
             <div id="info-banner" class="banner-info" hidden></div>
 
-            <section id="results-panel" class="norm-panel" hidden>
-                <h2>Analysis Results</h2>
-                <div id="keys-summary" class="result-block"></div>
-                <div id="normal-forms" class="norm-grid"></div>
-                <div class="result-block">
-                    <h3>Attribute Closure Map</h3>
-                    <pre id="closure-output"></pre>
+            <section class="card norm-input-section">
+                <h2 class="section-heading" style="font-size:1.1rem;margin-bottom:1.25rem">Input</h2>
+                <div class="norm-input-grid">
+                    <div class="field">
+                        <label class="field-label" for="attributes-input">Attributes (one per line)</label>
+                        <textarea id="attributes-input" class="code-input" rows="6" placeholder="A&#10;B&#10;C&#10;D"></textarea>
+                    </div>
+                    <div class="field">
+                        <label class="field-label" for="fds-input">Functional dependencies (JSON)</label>
+                        <textarea id="fds-input" class="code-input" rows="6" placeholder='[{"determinant":["A"],"dependent":["B","C"]}]'></textarea>
+                    </div>
+                    <div class="field">
+                        <label class="field-label" for="multivalued-input">Multivalued attributes (comma-separated)</label>
+                        <input type="text" id="multivalued-input" class="input" placeholder="hobbies, phone_numbers">
+                    </div>
+                    <div class="field">
+                        <label class="field-label" for="closure-input">Closure seed (comma-separated, optional)</label>
+                        <input type="text" id="closure-input" class="input" placeholder="A, B">
+                    </div>
+                </div>
+                <div class="toolbar-actions" style="margin-top:1.25rem">
+                    <button type="button" id="analyze-btn" class="btn btn-primary"><span class="btn-label">Analyze</span></button>
+                    <button type="button" id="save-report-btn" class="btn btn-secondary">Analyze &amp; Save Report</button>
                 </div>
             </section>
-        </div>
-    </main>
 
+            <section id="results-panel" hidden>
+                <div id="keys-summary" class="card keys-summary"></div>
+                <div id="normal-forms" class="norm-forms-grid"></div>
+                <details class="card" style="margin-top:1rem">
+                    <summary class="section-heading" style="font-size:1rem;cursor:pointer">Attribute closure</summary>
+                    <pre id="closure-output" class="code-block" style="margin-top:1rem"></pre>
+                </details>
+            </section>
+        </main>
+    </div>
+    <script src="https://unpkg.com/lucide@latest"></script>
     <script src="../js/config.js"></script>
     <script src="../js/api.js"></script>
     <script src="../js/ui.js"></script>
+    <script src="../js/shell.js"></script>
     <script src="../js/workspaces.js"></script>
     <script src="../js/normalization.js"></script>
 </body>
