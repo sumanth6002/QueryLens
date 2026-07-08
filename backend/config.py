@@ -1,11 +1,12 @@
 import os
 from datetime import timedelta
+from urllib.parse import quote_plus
 
 BACKEND_DIR = os.path.dirname(os.path.abspath(__file__))
 
 
 def resolve_database_uri() -> str:
-    """Use DATABASE_URL when set; otherwise SQLite in development."""
+    """Resolve database URI from env, using SQLite only in development."""
     explicit = os.environ.get("DATABASE_URL")
     if explicit:
         return explicit
@@ -16,7 +17,22 @@ def resolve_database_uri() -> str:
         db_path = os.path.join(instance_dir, "querylens.db").replace("\\", "/")
         return f"sqlite:///{db_path}"
 
-    return "mysql+pymysql://root:password@localhost:3306/querylens"
+    mysql_host = os.environ.get("MYSQL_HOST", "").strip()
+    mysql_user = os.environ.get("MYSQL_USER", "").strip()
+    mysql_password = os.environ.get("MYSQL_PASSWORD", "")
+    mysql_database = os.environ.get("MYSQL_DATABASE", "").strip()
+    mysql_port = os.environ.get("MYSQL_PORT", "3306").strip() or "3306"
+
+    if all((mysql_host, mysql_user, mysql_database)):
+        return (
+            f"mysql+pymysql://{quote_plus(mysql_user)}:{quote_plus(mysql_password)}"
+            f"@{mysql_host}:{mysql_port}/{quote_plus(mysql_database)}"
+        )
+
+    raise ValueError(
+        "Production database is not configured. Set DATABASE_URL or MYSQL_HOST, "
+        "MYSQL_USER, MYSQL_PASSWORD, and MYSQL_DATABASE."
+    )
 
 
 class Config:
@@ -57,10 +73,15 @@ class ProductionConfig(Config):
 
     @classmethod
     def init_app(cls, app) -> None:
-        missing = [
-            key for key in ("SECRET_KEY", "DATABASE_URL")
-            if not os.environ.get(key)
-        ]
+        has_database_url = bool(os.environ.get("DATABASE_URL"))
+        has_mysql_parts = all(
+            os.environ.get(key) for key in ("MYSQL_HOST", "MYSQL_USER", "MYSQL_DATABASE")
+        )
+        missing = ["SECRET_KEY"] if not os.environ.get("SECRET_KEY") else []
+
+        if not has_database_url and not has_mysql_parts:
+            missing.append("DATABASE_URL or MYSQL_HOST+MYSQL_USER+MYSQL_PASSWORD+MYSQL_DATABASE")
+
         if missing:
             raise ValueError(
                 f"Production requires environment variables: {', '.join(missing)}"

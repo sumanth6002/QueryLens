@@ -8,6 +8,7 @@ venv/
 .venv/
 env/
 .env
+backend/.env
 
 # Local SQLite database (development)
 backend/instance/
